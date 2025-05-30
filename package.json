@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "frontend:install": "cd frontend && npm install",
-    "frontend:dev": "cd frontend && npm run dev",
+    "dev": "cd frontend && npm run dev",
     "backend:tidy": "cd backend && go mod tidy",
     "gen": "cd proto && npx --prefix ../frontend buf generate",
     "build": "docker-compose build",
