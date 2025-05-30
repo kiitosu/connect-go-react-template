@@ -8,6 +8,34 @@
 - frontendでreactのアプリ開発
 - docker-composeで環境が立ち上がる
 
+## セットアップ手順
+
+1. リポジトリをクローン
+   ```sh
+   git clone https://github.com/kiitosu/connect-go-react-template.git
+   cd connect-go-react-template
+   ```
+
+2. バックエンドサーバー起動
+   以下すべて実行されます
+   - フロントエンドパッケージインストール
+   - protoファイルからのコード生成
+   - バックエンドのビルド
+   - バックエンドのDockerを開始
+   ```sh
+   npm all
+   ```
+
+3. フロントエンド起動
+   ```sh
+   npm run dev
+   ```
+
+4. ブラウザで `http://localhost:5173/` にアクセス
+
+![フロントエンド](image.png)
+
+
 ---
 以下はclineがまとめてくれた情報になっています。
 
