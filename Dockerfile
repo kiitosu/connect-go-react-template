@@ -1,6 +1,9 @@
 # ビルド環境
 FROM golang:alpine3.21 AS builder
 
+# SQLiteのビルドに必要
+RUN apk update && apk add --no-cache gcc musl-dev
+
 # Dockerコンテナ内の作業ディレクトリ
 WORKDIR /app
 
@@ -9,6 +12,9 @@ COPY ./backend ./
 
 # Docker コンテナでモジュールをダウンロード
 RUN go mod download
+
+# SQLiteのビルドに必要
+RUN export CGO_ENABLED=1 
 
 # gRPCサーバーをビルド
 RUN go build -o bin/server cmd/main.go
