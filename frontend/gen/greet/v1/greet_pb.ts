@@ -4,13 +4,15 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Todo } from "../../entpb/entpb_pb";
+import { file_entpb_entpb } from "../../entpb/entpb_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file greet/v1/greet.proto.
  */
 export const file_greet_v1_greet: GenFile = /*@__PURE__*/
-  fileDesc("ChRncmVldC92MS9ncmVldC5wcm90bxIIZ3JlZXQudjEiHAoMR3JlZXRSZXF1ZXN0EgwKBG5hbWUYASABKAkiIQoNR3JlZXRSZXNwb25zZRIQCghncmVldGluZxgBIAEoCTJKCgxHcmVldFNlcnZpY2USOgoFR3JlZXQSFi5ncmVldC52MS5HcmVldFJlcXVlc3QaFy5ncmVldC52MS5HcmVldFJlc3BvbnNlIgBCHlocZXhhbXBsZS9nZW4vZ3JlZXQvdjE7Z3JlZXR2MWIGcHJvdG8z");
+  fileDesc("ChRncmVldC92MS9ncmVldC5wcm90bxIIZ3JlZXQudjEiHAoMR3JlZXRSZXF1ZXN0EgwKBG5hbWUYASABKAkiIQoNR3JlZXRSZXNwb25zZRIQCghncmVldGluZxgBIAEoCSISChBMaXN0VG9kb3NSZXF1ZXN0Ii8KEUxpc3RUb2Rvc1Jlc3BvbnNlEhoKBXRvZG9zGAEgAygLMgsuZW50cGIuVG9kbzJKCgxHcmVldFNlcnZpY2USOgoFR3JlZXQSFi5ncmVldC52MS5HcmVldFJlcXVlc3QaFy5ncmVldC52MS5HcmVldFJlc3BvbnNlIgAyUwoLVG9kb1NlcnZpY2USRAoJTGlzdFRvZG9zEhouZ3JlZXQudjEuTGlzdFRvZG9zUmVxdWVzdBobLmdyZWV0LnYxLkxpc3RUb2Rvc1Jlc3BvbnNlQh5aHGV4YW1wbGUvZ2VuL2dyZWV0L3YxO2dyZWV0djFiBnByb3RvMw", [file_entpb_entpb]);
 
 /**
  * @generated from message greet.v1.GreetRequest
@@ -47,6 +49,38 @@ export const GreetResponseSchema: GenMessage<GreetResponse> = /*@__PURE__*/
   messageDesc(file_greet_v1_greet, 1);
 
 /**
+ * todo service 
+ *
+ * @generated from message greet.v1.ListTodosRequest
+ */
+export type ListTodosRequest = Message<"greet.v1.ListTodosRequest"> & {
+};
+
+/**
+ * Describes the message greet.v1.ListTodosRequest.
+ * Use `create(ListTodosRequestSchema)` to create a new message.
+ */
+export const ListTodosRequestSchema: GenMessage<ListTodosRequest> = /*@__PURE__*/
+  messageDesc(file_greet_v1_greet, 2);
+
+/**
+ * @generated from message greet.v1.ListTodosResponse
+ */
+export type ListTodosResponse = Message<"greet.v1.ListTodosResponse"> & {
+  /**
+   * @generated from field: repeated entpb.Todo todos = 1;
+   */
+  todos: Todo[];
+};
+
+/**
+ * Describes the message greet.v1.ListTodosResponse.
+ * Use `create(ListTodosResponseSchema)` to create a new message.
+ */
+export const ListTodosResponseSchema: GenMessage<ListTodosResponse> = /*@__PURE__*/
+  messageDesc(file_greet_v1_greet, 3);
+
+/**
  * @generated from service greet.v1.GreetService
  */
 export const GreetService: GenService<{
@@ -60,4 +94,19 @@ export const GreetService: GenService<{
   },
 }> = /*@__PURE__*/
   serviceDesc(file_greet_v1_greet, 0);
+
+/**
+ * @generated from service greet.v1.TodoService
+ */
+export const TodoService: GenService<{
+  /**
+   * @generated from rpc greet.v1.TodoService.ListTodos
+   */
+  listTodos: {
+    methodKind: "unary";
+    input: typeof ListTodosRequestSchema;
+    output: typeof ListTodosResponseSchema;
+  },
+}> = /*@__PURE__*/
+  serviceDesc(file_greet_v1_greet, 1);
 

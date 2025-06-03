@@ -23,6 +23,8 @@ const _ = connect.IsAtLeastVersion1_13_0
 const (
 	// GreetServiceName is the fully-qualified name of the GreetService service.
 	GreetServiceName = "greet.v1.GreetService"
+	// TodoServiceName is the fully-qualified name of the TodoService service.
+	TodoServiceName = "greet.v1.TodoService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -35,6 +37,8 @@ const (
 const (
 	// GreetServiceGreetProcedure is the fully-qualified name of the GreetService's Greet RPC.
 	GreetServiceGreetProcedure = "/greet.v1.GreetService/Greet"
+	// TodoServiceListTodosProcedure is the fully-qualified name of the TodoService's ListTodos RPC.
+	TodoServiceListTodosProcedure = "/greet.v1.TodoService/ListTodos"
 )
 
 // GreetServiceClient is a client for the greet.v1.GreetService service.
@@ -105,4 +109,74 @@ type UnimplementedGreetServiceHandler struct{}
 
 func (UnimplementedGreetServiceHandler) Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("greet.v1.GreetService.Greet is not implemented"))
+}
+
+// TodoServiceClient is a client for the greet.v1.TodoService service.
+type TodoServiceClient interface {
+	ListTodos(context.Context, *connect.Request[v1.ListTodosRequest]) (*connect.Response[v1.ListTodosResponse], error)
+}
+
+// NewTodoServiceClient constructs a client for the greet.v1.TodoService service. By default, it
+// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
+// connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewTodoServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) TodoServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	todoServiceMethods := v1.File_greet_v1_greet_proto.Services().ByName("TodoService").Methods()
+	return &todoServiceClient{
+		listTodos: connect.NewClient[v1.ListTodosRequest, v1.ListTodosResponse](
+			httpClient,
+			baseURL+TodoServiceListTodosProcedure,
+			connect.WithSchema(todoServiceMethods.ByName("ListTodos")),
+			connect.WithClientOptions(opts...),
+		),
+	}
+}
+
+// todoServiceClient implements TodoServiceClient.
+type todoServiceClient struct {
+	listTodos *connect.Client[v1.ListTodosRequest, v1.ListTodosResponse]
+}
+
+// ListTodos calls greet.v1.TodoService.ListTodos.
+func (c *todoServiceClient) ListTodos(ctx context.Context, req *connect.Request[v1.ListTodosRequest]) (*connect.Response[v1.ListTodosResponse], error) {
+	return c.listTodos.CallUnary(ctx, req)
+}
+
+// TodoServiceHandler is an implementation of the greet.v1.TodoService service.
+type TodoServiceHandler interface {
+	ListTodos(context.Context, *connect.Request[v1.ListTodosRequest]) (*connect.Response[v1.ListTodosResponse], error)
+}
+
+// NewTodoServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewTodoServiceHandler(svc TodoServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	todoServiceMethods := v1.File_greet_v1_greet_proto.Services().ByName("TodoService").Methods()
+	todoServiceListTodosHandler := connect.NewUnaryHandler(
+		TodoServiceListTodosProcedure,
+		svc.ListTodos,
+		connect.WithSchema(todoServiceMethods.ByName("ListTodos")),
+		connect.WithHandlerOptions(opts...),
+	)
+	return "/greet.v1.TodoService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case TodoServiceListTodosProcedure:
+			todoServiceListTodosHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedTodoServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedTodoServiceHandler struct{}
+
+func (UnimplementedTodoServiceHandler) ListTodos(context.Context, *connect.Request[v1.ListTodosRequest]) (*connect.Response[v1.ListTodosResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("greet.v1.TodoService.ListTodos is not implemented"))
 }

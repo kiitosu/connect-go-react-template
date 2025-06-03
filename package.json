@@ -6,11 +6,13 @@
   "scripts": {
     "frontend:install": "cd frontend && npm install",
     "dev": "cd frontend && npm run dev",
+    "ent:gen": "cd backend && go generate ./ent",
     "backend:tidy": "cd backend && go mod tidy",
     "gen": "cd proto && npx --prefix ../frontend buf generate",
     "build": "docker-compose build",
+    "debug:build": "cd backend && go build cmd/main.go",
     "up": "docker-compose up",
-    "setup": "npm run frontend:install && npm run backend:tidy && npm run gen && npm run build",
+    "setup": "npm run frontend:install && npm run backend:tidy && npm run ent:gen && npm run gen && npm run build",
     "all": "npm run setup && npm run up"
 },
   "keywords": [],

@@ -7,6 +7,7 @@
 package greetv1
 
 import (
+	entpb "example/gen/entpb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -109,17 +110,103 @@ func (x *GreetResponse) GetGreeting() string {
 	return ""
 }
 
+// todo service
+type ListTodosRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListTodosRequest) Reset() {
+	*x = ListTodosRequest{}
+	mi := &file_greet_v1_greet_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListTodosRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListTodosRequest) ProtoMessage() {}
+
+func (x *ListTodosRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_greet_v1_greet_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListTodosRequest.ProtoReflect.Descriptor instead.
+func (*ListTodosRequest) Descriptor() ([]byte, []int) {
+	return file_greet_v1_greet_proto_rawDescGZIP(), []int{2}
+}
+
+type ListTodosResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Todos         []*entpb.Todo          `protobuf:"bytes,1,rep,name=todos,proto3" json:"todos,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListTodosResponse) Reset() {
+	*x = ListTodosResponse{}
+	mi := &file_greet_v1_greet_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListTodosResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListTodosResponse) ProtoMessage() {}
+
+func (x *ListTodosResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_greet_v1_greet_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListTodosResponse.ProtoReflect.Descriptor instead.
+func (*ListTodosResponse) Descriptor() ([]byte, []int) {
+	return file_greet_v1_greet_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListTodosResponse) GetTodos() []*entpb.Todo {
+	if x != nil {
+		return x.Todos
+	}
+	return nil
+}
+
 var File_greet_v1_greet_proto protoreflect.FileDescriptor
 
 const file_greet_v1_greet_proto_rawDesc = "" +
 	"\n" +
-	"\x14greet/v1/greet.proto\x12\bgreet.v1\"\"\n" +
+	"\x14greet/v1/greet.proto\x12\bgreet.v1\x1a\x11entpb/entpb.proto\"\"\n" +
 	"\fGreetRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"+\n" +
 	"\rGreetResponse\x12\x1a\n" +
-	"\bgreeting\x18\x01 \x01(\tR\bgreeting2J\n" +
+	"\bgreeting\x18\x01 \x01(\tR\bgreeting\"\x12\n" +
+	"\x10ListTodosRequest\"6\n" +
+	"\x11ListTodosResponse\x12!\n" +
+	"\x05todos\x18\x01 \x03(\v2\v.entpb.TodoR\x05todos2J\n" +
 	"\fGreetService\x12:\n" +
-	"\x05Greet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse\"\x00B\x1eZ\x1cexample/gen/greet/v1;greetv1b\x06proto3"
+	"\x05Greet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse\"\x002S\n" +
+	"\vTodoService\x12D\n" +
+	"\tListTodos\x12\x1a.greet.v1.ListTodosRequest\x1a\x1b.greet.v1.ListTodosResponseB\x1eZ\x1cexample/gen/greet/v1;greetv1b\x06proto3"
 
 var (
 	file_greet_v1_greet_proto_rawDescOnce sync.Once
@@ -133,19 +220,25 @@ func file_greet_v1_greet_proto_rawDescGZIP() []byte {
 	return file_greet_v1_greet_proto_rawDescData
 }
 
-var file_greet_v1_greet_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_greet_v1_greet_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_greet_v1_greet_proto_goTypes = []any{
-	(*GreetRequest)(nil),  // 0: greet.v1.GreetRequest
-	(*GreetResponse)(nil), // 1: greet.v1.GreetResponse
+	(*GreetRequest)(nil),      // 0: greet.v1.GreetRequest
+	(*GreetResponse)(nil),     // 1: greet.v1.GreetResponse
+	(*ListTodosRequest)(nil),  // 2: greet.v1.ListTodosRequest
+	(*ListTodosResponse)(nil), // 3: greet.v1.ListTodosResponse
+	(*entpb.Todo)(nil),        // 4: entpb.Todo
 }
 var file_greet_v1_greet_proto_depIdxs = []int32{
-	0, // 0: greet.v1.GreetService.Greet:input_type -> greet.v1.GreetRequest
-	1, // 1: greet.v1.GreetService.Greet:output_type -> greet.v1.GreetResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: greet.v1.ListTodosResponse.todos:type_name -> entpb.Todo
+	0, // 1: greet.v1.GreetService.Greet:input_type -> greet.v1.GreetRequest
+	2, // 2: greet.v1.TodoService.ListTodos:input_type -> greet.v1.ListTodosRequest
+	1, // 3: greet.v1.GreetService.Greet:output_type -> greet.v1.GreetResponse
+	3, // 4: greet.v1.TodoService.ListTodos:output_type -> greet.v1.ListTodosResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_greet_v1_greet_proto_init() }
@@ -159,9 +252,9 @@ func file_greet_v1_greet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_greet_v1_greet_proto_rawDesc), len(file_greet_v1_greet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_greet_v1_greet_proto_goTypes,
 		DependencyIndexes: file_greet_v1_greet_proto_depIdxs,

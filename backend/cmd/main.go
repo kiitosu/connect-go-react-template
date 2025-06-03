@@ -17,8 +17,12 @@ import (
 
 	greetv1 "example/gen/greet/v1"
 	"example/gen/greet/v1/greetv1connect"
+
+	"example/gen/entpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+/* Greet */
 type GreetServer struct{}
 
 func (s *GreetServer) SaveRequest(
@@ -76,6 +80,52 @@ func (s *GreetServer) Greet(
 	return res, nil
 }
 
+/* Todo */
+type TodoServer struct{}
+
+func (s *TodoServer) ListTodos(
+	ctx context.Context,
+	req *connect.Request[greetv1.ListTodosRequest],
+) (*connect.Response[greetv1.ListTodosResponse], error) {
+	// ファイルベースのSQLiteデータベースを持つent.Clientを作成します。
+	client, err := ent.Open(dialect.SQLite, "file:ent.db?_fk=1")
+
+	if err != nil {
+		log.Fatalf("failed opening connection to sqlite: %v", err)
+	}
+	defer client.Close()
+	// 自動マイグレーションツールを実行して、すべてのスキーマリソースを作成します。
+	if err := client.Schema.Create(ctx); err != nil {
+		log.Fatalf("failed creating schema resources: %v", err)
+	}
+
+	todos, err := client.Todo.Query().All(ctx)
+	if err != nil {
+	return nil, err
+	}
+
+	var pbTodos []*entpb.Todo
+	for _, todo := range todos {
+		pbTodo := &entpb.Todo{
+			Id: int64(todo.ID),
+			Text: todo.Text,
+			CreatedAt: timestamppb.New(todo.CreatedAt),
+			Status: entpb.Todo_Status(entpb.Todo_Status_value[string(todo.Status)]),
+			Priority: int64(todo.Priority),
+		}
+		if err != nil {
+			return nil, err
+		}
+		pbTodos = append(pbTodos, pbTodo)
+	}
+
+	res := connect.NewResponse(&greetv1.ListTodosResponse{
+		Todos: pbTodos,
+	})
+
+	return res, nil
+}
+
 func withCORS(h http.Handler) http.Handler {
 	return cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173"},
@@ -85,16 +135,13 @@ func withCORS(h http.Handler) http.Handler {
 }
 
 func main() {
-	// greeterサービスを生成
-	greeter := &GreetServer{}
 	// マルチプレクサ(ルータ)を生成
 	mux := http.NewServeMux()
-	// サービスハンドラにgreeterサービス登録、
-	// ルーティング用のpathと関数呼び出し用のハンドラを作成
-	path, handler := greetv1connect.NewGreetServiceHandler(greeter)
-	fmt.Println("gRPC endpoint:", path) // pathの値を確認
+
 	// マルチプレクサ(ルータ)にパスとハンドラを追加
-	mux.Handle(path, handler)
+	mux.Handle(greetv1connect.NewGreetServiceHandler(&GreetServer{}))
+	mux.Handle(greetv1connect.NewTodoServiceHandler(&TodoServer{}))
+
 	// httpサーバーを起動
 	http.ListenAndServe(
 		"0.0.0.0:8080",

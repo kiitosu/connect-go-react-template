@@ -4,6 +4,8 @@ package greet.v1;
 
 option go_package = "example/gen/greet/v1;greetv1";
 
+import "entpb/entpb.proto"; // entpb.protoをインポート
+
 message GreetRequest {
   string name = 1;
 }
@@ -14,4 +16,15 @@ message GreetResponse {
 
 service GreetService {
   rpc Greet(GreetRequest) returns (GreetResponse) {}
+}
+
+/* todo service */
+message ListTodosRequest {}
+
+message ListTodosResponse {
+  repeated entpb.Todo todos = 1;
+}
+
+service TodoService {
+    rpc ListTodos(ListTodosRequest) returns (ListTodosResponse);
 }
